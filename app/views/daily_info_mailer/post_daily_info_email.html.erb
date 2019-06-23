@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <h3>今日の天気予報</h3>
+    <p>天気：<%= @weather_info %></p>
+    <p>気温(max)：<%= @temperature_max %>℃</p>
+    <p>気温(min)：<%= @temperature_min %>℃</p>
+    <p>降水確率：「06-12」<%= @rain_rates[0] %>％  「12-18」<%= @rain_rates[1] %>％  「18-24」<%= @rain_rates[2] %>％</p>
+
+    <% current_date = Time.now.strftime("%m月%d日") %>
+    <h3>今日の予定</h3>
+    <% @events.each do |event| %>
+    <% next if current_date != event[:event_date]  %>
+    <p>
+    <%= event[:start_time] %>〜<%= event[:end_time] %> <%= event[:summary] %> <% if event[:location].present? then %> @<%= event[:location] %>  <% end %>
+    </p>
+    <% end %>
+
+    <h3>1ヶ月後までの予定</h3>
+    <% display_date = current_date %>
+    <% @events.each do |event| %>
+      <% next if current_date == event[:event_date]  %>
+      <% if display_date != event[:event_date] then %>
+        <% display_date = event[:event_date] %>
+        <p><h4><%= event[:event_date] %><h4></p>
+      <% end %>
+      <p>
+      <%= event[:start_time] %>〜<%= event[:end_time] %> <%= event[:summary] %> <% if event[:location].present? then %> @<%= event[:location] %>  <% end %>
+      </p>
+    <% end %>
+  </body>
+</html>
